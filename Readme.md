@@ -11,3 +11,7 @@ options:
   -h, --help    show this help message and exit
   -c, --create  create a new schedule
 ```
+
+## Verification
+Because frab-cli isn't finished yet you can check the correctness of the generated schedule with the provided script `validate_schedule_xml.sh`. The script was written by the [VOC](https://github.com/voc/schedule/tree/master/validator/xsd).
+You can also use this [online validator](https://c3voc.de/schedulexml/).
