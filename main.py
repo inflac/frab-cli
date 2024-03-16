@@ -9,7 +9,7 @@ def main(create:bool):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='HSB shedule generator', description='small script for schedule creationin frab format', epilog='https://space.bi')
+    parser = argparse.ArgumentParser(prog='python main.py', description='Script for schedule creation on the commandline in frab format', epilog='')
     parser.add_argument('-c', '--create', action='store_true', help='create a new schedule')
 
     args = parser.parse_args()
