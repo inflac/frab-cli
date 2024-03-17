@@ -2,7 +2,7 @@
 frab-cli is a commandline tool for schedule creation in [frab](https://github.com/frab) format. Simply enter the schedule informations from the commandline and generate a .xml schedule.
 
 ## Notes
-Please be aware about frab-clis unfinished codebase. Currently there is no support for persons.
+Please be aware about frab-clis unfinished codebase. There might be checks missing to filter invalid inputs
 
 ## Usage
 ```
@@ -17,4 +17,4 @@ options:
 
 ## Verification
 Because frab-cli isn't finished yet you can check the correctness of the generated schedule with the provided script `validate_schedule_xml.sh`. The script was written by the [VOC](https://github.com/voc/schedule/tree/master/validator/xsd).
-You can also use this [online validator](https://c3voc.de/schedulexml/).
+You can also use their [online validator](https://c3voc.de/schedulexml/).
