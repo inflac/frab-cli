@@ -9,6 +9,7 @@ class Conference:
         self._base_url = base_url
         self._rooms = []
         self._days_obj = []
+        self._persons = []
 
     # Conference class getter
     def get_title(self):
@@ -40,6 +41,9 @@ class Conference:
     
     def get_days_obj(self):
         return self._days_obj
+    
+    def get_persons(self):
+        return self._persons
 
     # Additional getter
     def get_room_by_name(self, room_name):
@@ -51,6 +55,11 @@ class Conference:
     
     def get_room_names(self):
         return [room.get_name() for room in self._rooms]
+
+    def get_person_by_name(self, person_name):
+        for person in self._persons:
+            if person.get_name() == person_name: return person
+        return        
 
     def get_conference_xml(self):
         '''
@@ -73,7 +82,6 @@ class Conference:
         return conference_xml
 
     # Conference class setter
-    ## Setter need to modify conference_xml
     def set_title(self, title):
         self._title = title
         self.set_conference_xml()
@@ -106,3 +114,10 @@ class Conference:
     
     def set_days_obj(self, days_obj):
         self._days_obj = days_obj
+
+    # Additional setter
+    def add_person(self, person):
+        self._persons.append(person)
+
+    def add_persons(self, persons):
+        for person in persons: self._persons.append(person)

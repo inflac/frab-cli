@@ -31,10 +31,16 @@ def generate_random_string(length=8):
     guid = uuid.uuid4()
     return str(guid)
 
-def generate_id(room):
+def generate_room_id(room):
     highest_id = 0
     for event in room.get_events():
         if event.get_id() > highest_id: highest_id = event.get_id()
+    return (highest_id + 1)
+
+def generate_person_id(conference):
+    highest_id = 0
+    for person in conference.get_persons():
+        if person.get_id() > highest_id: highest_id = person.get_id()
     return (highest_id + 1)
 
 def check_in_conference_time(start_date, to_check, end_date):    

@@ -1,5 +1,5 @@
 class Event:
-    def __init__(self, guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, links, attachments):        
+    def __init__(self, guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, persons, links, attachments):        
         self._guid = guid 
         self._id = eid
         self._date = date
@@ -17,7 +17,7 @@ class Event:
         self._abstract = abstract
         self._description = description
         self._logo = logo
-        self._persons = []
+        self._persons = persons
         self._links = links
         self._attachments = attachments
 
@@ -87,6 +87,16 @@ class Event:
         return self._event_xml
     
     # Additional getter
+    def get_person_by_name(self, person_name):
+        for person in self._persons:
+            if person.get_name() == person_name: return person
+
+    def get_persons_xml(self):
+        persons_xml = ""
+        for person in self._persons:
+            persons_xml += person.get_person_xml()
+        return persons_xml
+
     def get_event_xml(self):
         '''
         Create the event XML based on the given parameters.
@@ -113,9 +123,9 @@ class Event:
         <language>{self._language}</language>
         <abstract>{self._abstract}</abstract>
         <description>{self._description}</description>
-        <logo>{self._logo}</logo>
+        {self._logo}
         <persons>
-        <!-- PERSONS -->
+        {self.get_persons_xml()}
         </persons>
         <links>{self._links}</links>
         <attachments>{self._attachments}</attachments>
@@ -124,9 +134,7 @@ class Event:
 
         return event_xml
 
-    # Event class setter
-    ## Setter need to modify conference_xml
-    
+    # Event class setter    
     def set_date(self, date):
         self._date = date
 

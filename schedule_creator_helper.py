@@ -3,11 +3,13 @@ import re
 
 from xml_data import *
 from helper import generate_random_string
-from helper import generate_id
+from helper import generate_room_id
 from helper import check_in_conference_time
 from helper import get_random_string
+from helper import generate_person_id
 
 from Conference import Conference
+from Person import Person
 from Room import Room
 from Event import Event
 from Day import Day
@@ -149,6 +151,46 @@ def create_rooms(conference):
     
     return rooms
 
+def get_persons(conference):
+    '''
+    Get the necessary parameters for a person from user inputs.
+
+    Return person objects in a list.
+    '''
+    persons = []
+    person_creation = True
+    while person_creation:
+        person_name = input("Enter the sperkers/organizers name/nick: ")
+        if not person_name:
+            print("Please enter a name")
+            continue
+        # Check if there already is a person with the entered name
+        person = conference.get_person_by_name(person_name)
+        if person == None:
+            person = Person(conference, person_name, generate_person_id(conference))
+            conference.add_person(person)
+        else:
+            while True:
+                print(f"There already is a user named: {person.get_name()}")
+                new_person_validator = input("Would you like to change the persons name? (yes/no): ")
+                if new_person_validator in ["y", "Y", "yes", "Yes", "true", "True"]:
+                    new_person_creation = True
+                    break #hier muss man zurück zum anfang der ersten while loop
+                elif new_person_validator in ["n", "N", "no", "No", "false", "False"]:
+                    new_person_creation = False
+                    break
+            if new_person_creation:
+                continue
+        persons.append(person)
+        while True:
+            new_person_validator = input("Would you like to add another person? (yes/no): ")
+            if new_person_validator in ["y", "Y", "yes", "Yes", "true", "True"]:
+                break
+            elif new_person_validator in ["n", "N", "no", "No", "false", "False"]:
+                person_creation = False
+                break
+    return persons
+
 def get_event_parameters(conference):
     '''
     Get the necessary parameters for an event from user inputs.
@@ -169,7 +211,7 @@ def get_event_parameters(conference):
             print("If you don't want to cancle the setup now, you may choose an existing room and later change it.")
 
     guid = generate_random_string()
-    eid = generate_id(room)
+    eid = generate_room_id(room)
     date, date_format = None, None
 
     # Get the date events date and time and also check if it's in the time of the conference
@@ -188,7 +230,7 @@ def get_event_parameters(conference):
             print(f"The entered event date: {date} is before or after the duration of {conference.get_title()}")
     
     start = date_format.time()
-    duration = input("Enter the duration of the event (mm:ss)(hh:mm:ss isn't tested): ")
+    duration = input("Enter the duration of the event (mm:ss or hh:mm:ss): ")
     slug = conference.get_acronym() + "-" + str(conference.get_days()) +  "-" + get_random_string()
     url = input("Enter the events url: ")
     recording = None
@@ -205,12 +247,17 @@ def get_event_parameters(conference):
     language = input("Entert the events language (e.g. en or de): ")
     abstract = input("Enter events abstract: ")
     description = input("Enter the events description: ")
-    logo = "https://"
+    logo_opening_tag = "<logo>"
+    logo = input("Enter a logo url (e.g. https://www.ccc.de/images/header.png): ")
+    if logo:
+        logo = logo_opening_tag + logo + "</logo>"
+    
+    persons = get_persons(conference)    
     links = "" # Only whitespace allowed. I don't know why xD
     attachments = ""
-    print("[INFO] You can't enter logos, links and attachments at the moment")
+    print("[INFO] You can't enter links and attachments at the moment")
     
-    return guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, links, attachments
+    return guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, persons, links, attachments
 
 def create_event(conference):
     '''
@@ -220,9 +267,9 @@ def create_event(conference):
     Return the Event object.
     '''
 
-    guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, links, attachments = get_event_parameters(conference)
+    guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, persons, links, attachments = get_event_parameters(conference)
     
-    event = Event(guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, links, attachments)
+    event = Event(guid, eid, date, start, duration, room, slug, url, recording, title, subtitle, track, etype, language, abstract, description, logo, persons, links, attachments)
     event.get_id()
     return event
 
